@@ -1,0 +1,24 @@
+# Training-specific configuration (optimized for small object pretraining)
+inherits: base_config.yaml  # Merge with base
+
+training:
+  epochs: 1
+  batch_size: 2 # Small due to video processing; optimized for speed
+  optimizer: adamw
+  learning_rate: 0.001
+  weight_decay: 0.0001
+  scheduler: cosine  # Cosine annealing
+  warmup_epochs: 5
+  clip_grad_norm: 1.0
+
+losses:
+  ltpn_weight: 1.0  # Tube Proposal Network loss
+  lmatch_weight: 1.0  # Matching loss
+  lbox_weight: 1.0  # Box regression
+  lscls_weight: 0.1  # Support classification loss
+  label_smoothing: 0.1  # For better generalization on novel classes
+
+few_shot:
+  n_way: full  # 'full' for full-way, or int like 5
+  k_shot: 5  # Shots per class
+  episodes_per_epoch: 100  # Episodic training

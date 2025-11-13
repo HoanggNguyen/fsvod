@@ -1,0 +1,32 @@
+# Dataset-specific configuration (adapted for drone object search dataset)
+inherits: base_config.yaml
+
+dataset:
+  name: drone_object_search
+  constraints:
+    total_classes: 10  # Default number of classes for model initialization
+    base_classes: 10
+    val_novel_classes: 0
+    test_novel_classes: 0
+    videos_per_class: none  # Per-sample videos
+    total_videos: dynamic  # Determined from annotations.json
+    annotation_fps: full  # Per-frame when object appears (25 FPS videos)
+    format: custom-json  # Single annotations.json with video_id and intervals
+    specialization: small_objects_drone  # Pretraining focus: small objects (e.g., scale aug for drone views)
+
+  paths:
+    samples: dataset/samples/  # Root for drone_video_XXX/
+    videos: drone_video.mp4  # Relative to each drone_video_XXX/
+    supports: object_images/  # Relative, with img_1.jpg, etc. (K=3 shot)
+    annotations: dataset/annotations/annotations.json  # Path to annotations file
+    splits: none  # No splits; assume all for predict, or manual train/val
+
+  preprocessing:
+    frame_size: [1024, 1024]  # Higher res for small objects (drone-like square crops)
+    fps_sample: 25  # Match video FPS; process full for accurate frame numbers
+    augmentations:
+      - random_flip: 0.5
+      - random_crop: true  # Focus on small regions
+      - color_jitter: true
+      - random_scale: [0.5, 2.0]  # Emphasize small scales for drone small objects
+      - random_rotate: [-30, 30]  # Simulate drone angles

@@ -1,0 +1,19 @@
+# Evaluation-specific configuration (with FPS constraint)
+inherits: base_config.yaml
+
+evaluation:
+  batch_size: 1  # For video inference
+  metrics:
+    - ap  # Average Precision
+    - ap50
+    - ap75
+    - map  # Mean AP for few-shot
+    - fps  # Measure inference FPS (target >=15 for drone videos)
+  thresholds:
+    iou: 0.5
+    conf: 0.5
+  few_shot:
+    n_way: full
+    k_shot: 5
+    num_episodes: 10  # For averaging results
+  inference_fps_target: 15  # Minimum FPS for small object detection in drone videos

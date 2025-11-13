@@ -1,0 +1,22 @@
+# Model architecture configuration (optimized for 15+ FPS and small objects)
+inherits: base_config.yaml
+
+model:
+  pretrained: true  # Whether to use pretrained weights for the backbone
+  tpn:  # Tube Proposal Network (efficient for speed)
+    proposal_num: 500  # Reduced from 1000 for faster inference (>=15 FPS)
+    inter_frame: true  # Use inter-frame proposals
+    deformable_roi: true  # Deformable RoIAlign (efficient in PyTorch 1.12.1)
+    mlp_layers: 2
+    id_verification: true  # Identity score for same object
+
+  tmn:  # Temporal Matching Network (TMN+)
+    aggregation: avg  # Tube feature aggregation (e.g., average across frames)
+    multi_relation: true  # Multi-relation head
+    temporal_align: true  # Temporal alignment branch
+    contrastive: true  # Contrastive training
+
+  general:
+    tube_length: 2  # Short tubes for speed in drone videos
+    feature_dim: 512  # Reduced for lighter model
+    inference_fps_target: 15  # Ensure model runs at >=15 FPS on drone input

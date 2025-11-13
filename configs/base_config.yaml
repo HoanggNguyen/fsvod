@@ -1,0 +1,23 @@
+# Base configuration for FSVOD project (specialized for pretraining on small object detection in drone videos)
+project:
+  name: fsvod_project
+  root_dir: .  # Update to actual path
+  device: cpu  # or 'cpu'
+  seed: 42
+  pytorch_version: 1.12.1  # Required version constraint
+  multi_gpu: false  # Enable multi-GPU (DataParallel); false for single
+  fp16: true  # Enable FP16 mixed precision (AMP); requires CUDA
+
+logging:
+  level: INFO
+  log_dir: logs/
+  tensorboard: true
+
+data:
+  root: data
+  num_workers: 4
+  pin_memory: true
+
+model:
+  backbone: mobilenetv2  # Lighter backbone for FPS efficiency (target >=15 FPS on drone videos)
+  pretrained: true
